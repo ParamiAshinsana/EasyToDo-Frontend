@@ -1,13 +1,34 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
+interface Task {
+  name: string;
+  completed: boolean;
+}
 
 @Component({
-  selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
+  imports: [CommonModule, FormsModule],
 })
 export class AppComponent {
-  title = 'todo-frontend';
+markAsDone(_t14: Task) {
+throw new Error('Method not implemented.');
+}
+  newTask: string = '';
+  tasks: Task[] = [];
+
+  addTask() {
+    if (this.newTask.trim()) {
+      this.tasks.push({ name: this.newTask, completed: false });
+      this.newTask = '';
+    }
+  }
+
+  deleteTask(task: Task) {
+    this.tasks = this.tasks.filter(t => t !== task);
+  }
 }
