@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TaskService } from '../app/service/service.component';
@@ -20,10 +20,12 @@ interface Task {
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
+
   newTask: string = '';
   tasks: Task[] = [];
+  editTask: any;
 
-  constructor(private taskService: TaskService) {}
+  constructor(private taskService: TaskService, private cdr: ChangeDetectorRef, private ngZone: NgZone) {}
 
   ngOnInit() {
     this.taskService.getTasks().subscribe((tasks) => (this.tasks = tasks));
@@ -46,46 +48,56 @@ export class AppComponent implements OnInit {
   }
 
     updateTask(task: Task) {
-    
+      this.editTask = { ...task };
+    }
+    cancelUpdate() {
+      this.editTask = null;
+   }
+   saveUpdatedTask() {
+    if (this.editTask) {
+      this.taskService.updateTask(this.editTask).subscribe({
+        next: (updatedTask) => {
+          // Check if the API response contains the updated task object
+          if (updatedTask && updatedTask.taskId) {
+            // Find the index of the task in the list that needs to be updated
+            const index = this.tasks.findIndex(t => t.taskId === updatedTask.taskId);
+            if (index !== -1) {
+              // Update the task in the list with the new task description
+              this.tasks[index] = updatedTask;
+            }
+          }
+          // Close the pop-up after saving
+          this.ngZone.run(() => {
+            this.editTask = null;
+          });
+        },
+        error: (err) => {
+          console.error('Error updating task', err);
+          // Handle error if needed
+        }
+      });
+    } else {
+      console.error('No task is being edited');
+    }
   }
+  
+  
+  
 
-  markAsDone(task: Task) {
+    markAsDone(task: Task) {
     task.completed = !task.completed;
     this.taskService.updateTask(task).subscribe();
-  }
+   }
 }
 
 
 
 
-// import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-// import { Observable } from 'rxjs';
 
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class TaskService {
-//   private apiUrl = 'http://localhost:8080/api/v1/task';
 
-//   constructor(private http: HttpClient) { }
 
-//   getTasks(): Observable<Task[]> {
-//     return this.http.get<Task[]>(`${this.apiUrl}/getAllTasks`);
-//   }
 
-//   addTask(task: Task): Observable<Task> {
-//     return this.http.post<Task>(`${this.apiUrl}/saveTask`, task);
-//   }
 
-//   deleteTask(id: number): Observable<void> {
-//     return this.http.delete<void>(`${this.apiUrl}/deleteTask/${id}`);
-//   }
-
-//   updateTask(task: Task): Observable<void> {
-//     return this.http.put<void>(`${this.apiUrl}/updateTask/${task.id}`, task);
-//   }
-// }
 
 
 
