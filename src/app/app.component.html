@@ -21,8 +21,8 @@
                         </div>
                       </div>
                       <div class="widget-content-left flex2">
-                        <div class="widget-heading">{{ task.name }}</div>
-                        <div class="widget-subheading">By {{ task.name }}</div>
+                        <div class="widget-heading">{{ task.taskDescription }}</div>
+                        <div class="widget-subheading">By {{ task.taskId }}</div>
                       </div>
                       <div class="widget-content-right">
                         <button class="border-0 btn-transition btn btn-outline-success" (click)="markAsDone(task)">
@@ -31,7 +31,7 @@
                         <button class="border-0 btn-transition btn btn-outline-danger" (click)="deleteTask(task)">
                           <i class="fa fa-trash"></i>
                         </button>
-                        <button class="border-0 btn-transition" (click)="deleteTask(task)">
+                        <button class="border-0 btn-transition" (click)="updateTask(task)">
                           <i class="fa fa-pencil"></i>
                         </button>
                       </div>

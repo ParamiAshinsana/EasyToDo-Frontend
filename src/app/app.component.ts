@@ -4,8 +4,10 @@ import { CommonModule } from '@angular/common';
 import { TaskService } from '../app/service/service.component';
 
 interface Task {
-  id: number;
-  name: string;
+  taskId: string;
+  taskDescription: string;
+  issuedDate:string;
+  issuedTime:string;
   completed: boolean;
 }
 
@@ -29,7 +31,7 @@ export class AppComponent implements OnInit {
 
   addTask() {
     if (this.newTask.trim()) {
-      const task: Task = { id: 0, name: this.newTask, completed: false };
+      const task: Task = { taskId: "", taskDescription: this.newTask, issuedDate:"",issuedTime:"", completed: false };
       this.taskService.addTask(task).subscribe((newTask) => {
         this.tasks.push(newTask);
         this.newTask = '';
@@ -38,9 +40,13 @@ export class AppComponent implements OnInit {
   }
 
   deleteTask(task: Task) {
-    this.taskService.deleteTask(task.id).subscribe(() => {
-      this.tasks = this.tasks.filter((t) => t.id !== task.id);
+    this.taskService.deleteTask(task.taskId).subscribe(() => {
+      this.tasks = this.tasks.filter((t) => t.taskId !== task.taskId);
     });
+  }
+
+    updateTask(task: Task) {
+    
   }
 
   markAsDone(task: Task) {
@@ -52,6 +58,34 @@ export class AppComponent implements OnInit {
 
 
 
+// import { Injectable } from '@angular/core';
+// import { HttpClient } from '@angular/common/http';
+// import { Observable } from 'rxjs';
+
+// @Injectable({
+//   providedIn: 'root'
+// })
+// export class TaskService {
+//   private apiUrl = 'http://localhost:8080/api/v1/task';
+
+//   constructor(private http: HttpClient) { }
+
+//   getTasks(): Observable<Task[]> {
+//     return this.http.get<Task[]>(`${this.apiUrl}/getAllTasks`);
+//   }
+
+//   addTask(task: Task): Observable<Task> {
+//     return this.http.post<Task>(`${this.apiUrl}/saveTask`, task);
+//   }
+
+//   deleteTask(id: number): Observable<void> {
+//     return this.http.delete<void>(`${this.apiUrl}/deleteTask/${id}`);
+//   }
+
+//   updateTask(task: Task): Observable<void> {
+//     return this.http.put<void>(`${this.apiUrl}/updateTask/${task.id}`, task);
+//   }
+// }
 
 
 
