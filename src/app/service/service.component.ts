@@ -10,9 +10,6 @@ interface Task {
   completed: boolean;
 }
 
-
-
-
 @Injectable({
   providedIn: 'root',
 })
