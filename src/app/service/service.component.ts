@@ -10,13 +10,14 @@ interface Task {
   completed: boolean;
 }
 
+
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
   private baseUrl = 'http://localhost:8080/api/v1/task'; // Update with your Spring Boot backend URL
 
-  
+
   constructor(private http: HttpClient) {}
 
   getTasks(): Observable<Task[]> {
