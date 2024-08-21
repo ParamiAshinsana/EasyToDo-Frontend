@@ -26,11 +26,13 @@ export class TaskService {
   addTask(task: Task): Observable<Task> {
     return this.http.post<Task>(this.baseUrl+"/saveTask", task);
   }
-  
+
 
   deleteTask(taskId: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl+"/deleteTask"}/${taskId}`);
   }
+
+  
 
   updateTask(task: Task): Observable<Task> {
     return this.http.put<Task>(`${this.baseUrl+"/updateTask"}/${task.taskId}`, task);
